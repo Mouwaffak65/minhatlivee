@@ -918,6 +918,13 @@
         .btn-register {
             animation: pulse 2s infinite;
         }
+        
+        /* External link indicator */
+        .external-link-indicator {
+            font-size: 0.7rem;
+            margin-right: 3px;
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body>
@@ -936,10 +943,10 @@
             <nav>
                 <ul id="navMenu">
                     <li><a href="index.html">الرئيسية</a></li>
-                    <li><a href="bourses.html" class="active">المنح الدراسية</a></li>
-                    <li><a href="formations.html">الدورات التدريبية</a></li>
-                    <li><a href="services.html">خدماتنا</a></li>
-                    <li><a href="infos.html">اتصل بنا</a></li>
+                    <li><a href="index.bourses.html" class="active">المنح الدراسية</a></li>
+                    <li><a href="index.courses.html">الدورات التدريبية</a></li>
+                    <li><a href="index.services.html">خدماتنا</a></li>
+                    <li><a href="index.contact.html">اتصل بنا</a></li>
                 </ul>
             </nav>
         </div>
@@ -1072,7 +1079,7 @@
     </footer>
 
     <script>
-        // Sample data for scholarships (only 3 scholarships)
+        // Sample data for scholarships (only 3 scholarships) with external links
         const scholarshipsData = [
             {
                 id: 1,
@@ -1087,9 +1094,9 @@
                 duration: "2-4 سنوات",
                 language: "الإنجليزية",
                 requirements: "معدل تراكمي 3.5+، شهادة لغة",
-                guideLink: "#",
-                helpLink: "#",
-                registerLink: "https://www.canva.com/"
+                guideLink: "https://www.harvard.edu/admissions/guides",
+                helpLink: "https://www.harvard.edu/help/registration",
+                registerLink: "https://www.harvard.edu/apply"
             },
             {
                 id: 2,
@@ -1104,9 +1111,9 @@
                 duration: "1-3 سنوات",
                 language: "الفرنسية / الإنجليزية",
                 requirements: "شهادة لغة، مقابلة",
-                guideLink: "#",
-                helpLink: "#",
-                registerLink: "#"
+                guideLink: "https://www.campusfrance.org/guides",
+                helpLink: "https://www.campusfrance.org/help",
+                registerLink: "https://www.campusfrance.org/apply"
             },
             {
                 id: 3,
@@ -1121,9 +1128,9 @@
                 duration: "4 سنوات للبكالوريوس",
                 language: "اليابانية / الإنجليزية",
                 requirements: "معدل جيد، شهادة لغة يابانية",
-                guideLink: "#",
-                helpLink: "#",
-                registerLink: "#"
+                guideLink: "https://www.u-tokyo.ac.jp/admissions/guide",
+                helpLink: "https://www.u-tokyo.ac.jp/help/registration",
+                registerLink: "https://www.u-tokyo.ac.jp/apply"
             }
         ];
 
@@ -1225,17 +1232,20 @@
                     </div>
                     
                     <div class="scholarship-buttons">
-                        <a href="${scholarship.guideLink}" class="btn-download">
+                        <a href="${scholarship.guideLink}" class="btn-download" target="_blank" rel="noopener noreferrer">
                             <i class="fas fa-download"></i>
                             تحميل دليل القبول
+                            <i class="fas fa-external-link-alt external-link-indicator"></i>
                         </a>
-                        <a href="${scholarship.helpLink}" class="btn-help">
+                        <a href="${scholarship.helpLink}" class="btn-help" target="_blank" rel="noopener noreferrer">
                             <i class="fas fa-hands-helping"></i>
                             المساعدة في التسجيل
+                            <i class="fas fa-external-link-alt external-link-indicator"></i>
                         </a>
-                        <a href="${scholarship.registerLink}" class="btn-register">
+                        <a href="${scholarship.registerLink}" class="btn-register" target="_blank" rel="noopener noreferrer">
                             <i class="fas fa-user-plus"></i>
                             تسجيل مباشر
+                            <i class="fas fa-external-link-alt external-link-indicator"></i>
                         </a>
                     </div>
                 </div>
@@ -1275,171 +1285,47 @@
             }
         }
         
-        // Add functionality to buttons
+        // Add functionality to show external link warning
         document.addEventListener('click', function(e) {
-            // Download guide button
+            // For download guide button
             if (e.target.classList.contains('btn-download') || 
                 e.target.closest('.btn-download')) {
-                e.preventDefault();
-                
-                const scholarshipTitle = e.target.closest('.scholarship-card').querySelector('.scholarship-title').textContent;
-                alert(`سيتم تحميل دليل القبول لـ: ${scholarshipTitle}\n\nسيبدأ التحميل خلال ثوانٍ...`);
-                
-                // Simulate download
-                setTimeout(() => {
-                    alert('تم تحميل دليل القبول بنجاح!');
-                }, 1000);
+                // Check if it's an external link
+                const link = e.target.href || e.target.closest('.btn-download').href;
+                if (link && !link.includes(window.location.hostname) && !link.startsWith('#')) {
+                    // Show external link warning
+                    if (!confirm('أنت على وشك الانتقال إلى موقع خارجي. هل تريد المتابعة؟')) {
+                        e.preventDefault();
+                    }
+                }
             }
             
-            // Help registration button
+            // For help registration button
             if (e.target.classList.contains('btn-help') || 
                 e.target.closest('.btn-help')) {
-                e.preventDefault();
-                
-                const scholarshipTitle = e.target.closest('.scholarship-card').querySelector('.scholarship-title').textContent;
-                alert(`للمساعدة في التسجيل لـ: ${scholarshipTitle}\n\nسيتم تحويلك إلى صفحة المساعدة...`);
+                // Check if it's an external link
+                const link = e.target.href || e.target.closest('.btn-help').href;
+                if (link && !link.includes(window.location.hostname) && !link.startsWith('#')) {
+                    // Show external link warning
+                    if (!confirm('أنت على وشك الانتقال إلى موقع خارجي. هل تريد المتابعة؟')) {
+                        e.preventDefault();
+                    }
+                }
             }
             
-            // Direct registration button
+            // For direct registration button
             if (e.target.classList.contains('btn-register') || 
                 e.target.closest('.btn-register')) {
-                e.preventDefault();
-                
-                const scholarshipTitle = e.target.closest('.scholarship-card').querySelector('.scholarship-title').textContent;
-                const scholarshipUniversity = e.target.closest('.scholarship-card').querySelector('.scholarship-detail:nth-child(1) span').textContent.replace('الجامعة: ', '');
-                
-                // Show registration form modal
-                showRegistrationForm(scholarshipTitle, scholarshipUniversity);
+                // Check if it's an external link
+                const link = e.target.href || e.target.closest('.btn-register').href;
+                if (link && !link.includes(window.location.hostname) && !link.startsWith('#')) {
+                    // Show external link warning
+                    if (!confirm('أنت على وشك الانتقال إلى موقع خارجي للتسجيل. هل تريد المتابعة؟')) {
+                        e.preventDefault();
+                    }
+                }
             }
         });
-        
-        // Function to show registration form
-        function showRegistrationForm(scholarshipTitle, university) {
-            // Create modal overlay
-            const modalOverlay = document.createElement('div');
-            modalOverlay.style.cssText = `
-                position: fixed;
-                top: 0;
-                right: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0, 0, 0, 0.7);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 2000;
-                padding: 20px;
-            `;
-            
-            // Create modal content
-            const modalContent = document.createElement('div');
-            modalContent.style.cssText = `
-                background-color: white;
-                border-radius: var(--border-radius);
-                padding: 40px;
-                max-width: 500px;
-                width: 100%;
-                max-height: 90vh;
-                overflow-y: auto;
-                position: relative;
-                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-            `;
-            
-            // Modal HTML
-            modalContent.innerHTML = `
-                <button class="close-modal" style="position: absolute; top: 15px; left: 15px; background: none; border: none; font-size: 1.5rem; color: var(--gray); cursor: pointer;">
-                    <i class="fas fa-times"></i>
-                </button>
-                
-                <h2 style="color: var(--primary); margin-bottom: 10px;">تسجيل مباشر للمنحة</h2>
-                <p style="color: var(--gray); margin-bottom: 25px;">
-                    المنحة: <strong>${scholarshipTitle}</strong><br>
-                    الجامعة: <strong>${university}</strong>
-                </p>
-                
-                <form id="registrationForm" style="display: grid; gap: 20px;">
-                    <div style="display: grid; gap: 8px;">
-                        <label style="font-weight: 600; color: var(--dark);">الاسم الكامل *</label>
-                        <input type="text" required style="padding: 12px 15px; border: 2px solid var(--light-gray); border-radius: var(--border-radius-sm); font-size: 1rem; font-family: 'Tajawal'; text-align: right;" placeholder="أدخل اسمك الكامل">
-                    </div>
-                    
-                    <div style="display: grid; gap: 8px;">
-                        <label style="font-weight: 600; color: var(--dark);">البريد الإلكتروني *</label>
-                        <input type="email" required style="padding: 12px 15px; border: 2px solid var(--light-gray); border-radius: var(--border-radius-sm); font-size: 1rem; font-family: 'Tajawal'; text-align: right;" placeholder="example@email.com">
-                    </div>
-                    
-                    <div style="display: grid; gap: 8px;">
-                        <label style="font-weight: 600; color: var(--dark);">رقم الهاتف *</label>
-                        <input type="tel" required style="padding: 12px 15px; border: 2px solid var(--light-gray); border-radius: var(--border-radius-sm); font-size: 1rem; font-family: 'Tajawal'; text-align: right;" placeholder="05XXXXXXXX">
-                    </div>
-                    
-                    <div style="display: grid; gap: 8px;">
-                        <label style="font-weight: 600; color: var(--dark);">المستوى الدراسي *</label>
-                        <select required style="padding: 12px 15px; border: 2px solid var(--light-gray); border-radius: var(--border-radius-sm); font-size: 1rem; font-family: 'Tajawal'; text-align: right; background-color: white;">
-                            <option value="">اختر المستوى الدراسي</option>
-                            <option value="bachelor">بكالوريوس</option>
-                            <option value="master">ماجستير</option>
-                            <option value="phd">دكتوراه</option>
-                        </select>
-                    </div>
-                    
-                    <div style="display: grid; gap: 8px;">
-                        <label style="font-weight: 600; color: var(--dark);">رسالة التقديم (اختياري)</label>
-                        <textarea style="padding: 12px 15px; border: 2px solid var(--light-gray); border-radius: var(--border-radius-sm); font-size: 1rem; font-family: 'Tajawal'; text-align: right; min-height: 100px;" placeholder="اكتب رسالتك هنا..."></textarea>
-                    </div>
-                    
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <input type="checkbox" id="agreeTerms" required style="width: 20px; height: 20px;">
-                        <label for="agreeTerms" style="font-size: 0.9rem; color: var(--gray);">
-                            أوافق على شروط التسجيل وسياسة الخصوصية
-                        </label>
-                    </div>
-                    
-                    <button type="submit" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%); color: white; border: none; padding: 16px; border-radius: var(--border-radius-sm); font-weight: 700; font-size: 1.1rem; cursor: pointer; transition: var(--transition); margin-top: 10px;">
-                        <i class="fas fa-paper-plane"></i> إرسال طلب التسجيل
-                    </button>
-                </form>
-            `;
-            
-            // Append modal to page
-            modalOverlay.appendChild(modalContent);
-            document.body.appendChild(modalOverlay);
-            
-            // Close modal function
-            function closeModal() {
-                document.body.removeChild(modalOverlay);
-            }
-            
-            // Close modal when clicking X or outside modal
-            modalOverlay.querySelector('.close-modal').addEventListener('click', closeModal);
-            modalOverlay.addEventListener('click', function(e) {
-                if (e.target === modalOverlay) {
-                    closeModal();
-                }
-            });
-            
-            // Handle form submission
-            modalContent.querySelector('#registrationForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Get form data
-                const formData = {
-                    name: this.querySelector('input[type="text"]').value,
-                    email: this.querySelector('input[type="email"]').value,
-                    phone: this.querySelector('input[type="tel"]').value,
-                    level: this.querySelector('select').value,
-                    message: this.querySelector('textarea').value,
-                    scholarship: scholarshipTitle,
-                    university: university
-                };
-                
-                // Show success message
-                closeModal();
-                setTimeout(() => {
-                    alert(`تم إرسال طلب التسجيل بنجاح!\n\nسنتصل بك خلال 24 ساعة على الرقم: ${formData.phone}\nللمتابعة في عملية التسجيل للمنحة:\n${scholarshipTitle}`);
-                }, 300);
-            });
-        }
     </script>
 </body>
 </html>
